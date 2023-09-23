@@ -10,7 +10,6 @@
 
 .outer:hover, .outer:focus {
     background-color: #fff;
-    /* transform: scale(1.03); */
     transform: translateY(-0.5em);
 }
 
