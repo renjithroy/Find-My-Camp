@@ -3,9 +3,10 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
+const dbUrl = process.env.DB_URL;
 
 mongoose
-  .connect("mongodb://localhost:27017/yelp-camp")
+  .connect(dbUrl)
   .then(() => {
     console.log("Database connected");
   })
