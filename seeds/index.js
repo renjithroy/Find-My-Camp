@@ -34,7 +34,7 @@ function getRandomDesc(arr) {
   return item;
 }
 
-const authors = ["640af1f131ffd858b0942b9f", "64172eb9f76a1f4b62ce98ed", "64172e79f76a1f4b62ce8b29"];
+const authors = ["650ecc610db8191d50b77aba", "650eccd10db8191d50b78c64", "650ecca60db8191d50b78555", "650ead360451915030954810"];
 const descriptions = ["Offering mountain views, Caradamam village villas in Munnar offers accommodation, a garden and a terrace. Fitted with a balcony, the units feature a flat-screen TV and a private bathroom with shower. There is a seating and a dining area in all units.",
   "Set in Jaisalmer in the Rajasthan region, with Jaisalmer Fort and Salim Singh Ki Haveli nearby, 1st night desert camping offers accommodation with free private parking.",
   "Featuring a garden, Kura Kura Agonda is located in Canacona, within 36 km of Margao Railway Station and 17 km of Cabo De Rama Fort.",
