@@ -73,8 +73,8 @@ const seedDB = async () => {
           filename: 'Campscape/cntbodr1cx2gw8ss4cxy',
         },
         {
-          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1679244488/Campscape/f5olbqnjaaayshmnojwd.jpg',
-          filename: 'Campscape/f5olbqnjaaayshmnojwd',
+          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1693922137/Campscape/zfqo8ouxczamelv9o9km.jpg',
+          filename: 'Campscape/zfqo8ouxczamelv9o9km',
         }
       ],
       isVerified: true,
