@@ -69,16 +69,16 @@ const seedDB = async () => {
       },
       images: [
         {
-          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1679493235/Campscape/njimg5ngpgrybptqwuab.jpg',
-          filename: 'Campscape/njimg5ngpgrybptqwuab',
+          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1695473082/Campscape/tent1_rtihmp.jpg',
+          filename: 'Campscape/tent1_rtihmp',
         },
         {
-          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1679323953/Campscape/cntbodr1cx2gw8ss4cxy.jpg',
-          filename: 'Campscape/cntbodr1cx2gw8ss4cxy',
+          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1695473081/Campscape/tent2_a00gj5.jpg',
+          filename: 'Campscape/tent2_a00gj5',
         },
         {
-          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1693922137/Campscape/zfqo8ouxczamelv9o9km.jpg',
-          filename: 'Campscape/zfqo8ouxczamelv9o9km',
+          url: 'https://res.cloudinary.com/djkeah1gc/image/upload/v1695473081/Campscape/ten3_bmx6hh.jpg',
+          filename: 'Campscape/ten3_bmx6hh',
         }
       ],
       isVerified: true,
