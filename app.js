@@ -53,8 +53,9 @@ app.use(methodOverride("_method")); //to use DELETE, PUT, PATCH
 app.use(express.static(path.join(__dirname, "public"))); //serve public directory files
 app.use(mongoSanitize());
 
+//mongodb://localhost:27017/yelp-camp
 const store = new MongoDBStore({
-  url: "mongodb://localhost:27017/yelp-camp",
+  url: dbUrl,
   secret: "thisshouldbeabettersecret!",
   touchAfter: 24 * 60 * 60
 })
