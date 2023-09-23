@@ -1,0 +1,11 @@
+.outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.outer-map {
+    border: 1px solid rgba(128, 128, 128, 0.6);
+    border-radius: 2px;
+    width: 60%;
+}

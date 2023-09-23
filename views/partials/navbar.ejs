@@ -1,0 +1,144 @@
+<style>
+    .container {
+        margin-top: 20px;
+    }
+
+    .nav-link {
+        font-weight: 400;
+        color: rgb(27, 26, 26);
+    }
+
+    .register-btn {
+        background-color: black;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 15px;
+        padding: 10px 20px !important;
+        margin-left: 15px;
+        width: fit-content;
+    }
+
+    .register-btn:hover {
+        color: rgb(220, 220, 220);
+        background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .add-campground-link {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: black;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 10px 20px !important;
+        margin-left: 15px;
+        width: fit-content;
+    }
+
+    .add-campground-link:hover {
+        color: grey;
+    }
+
+    .add-campground-link-loggedin {
+        background-color: black;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 10px 20px !important;
+        margin-left: 15px;
+        font-weight: 400;
+    }
+
+    .add-campground-link-loggedin:hover {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.85);
+        transition: all 200ms ease-in-out;
+    }
+
+    .navbar-brand {
+        font-weight: 500;
+    }
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    @media (max-width: 991px) {
+        .register-btn {
+            background-color: #fff;
+            color: black;
+            padding: 0px !important;
+            margin-left: 0px;
+        }
+
+        .register-btn:hover{
+            color: black;
+            background-color: #fff;
+        }
+
+        .add-campground-link{
+            background-color: #fff;
+            padding: 0 !important;
+            margin-left: 0px;
+            font-weight: 400;
+        }
+
+        .add-campground-link-loggedin{
+            background-color: #fff;
+            color: black;
+            padding: 0 !important;
+            margin-left: 0px;
+            font-weight: 400;
+        }
+
+        .add-campground-link-loggedin:hover{
+            background-color: #fff;
+            color: black;
+        }
+
+        .mobile-nav{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-link{
+            padding: 0;
+            padding-top: 20px !important;
+        }
+
+    }
+</style>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container-fluid ">
+            <!-- FindMyCamp -->
+            <a class="navbar-brand" href="/">⛺ FindMyCamp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav mobile-nav">
+                    <a class="nav-link" href="/campgrounds">Home</a>
+                    <% if(currentUser) {%>
+                        <a class="nav-link add-campground-link-loggedin" href="/campgrounds/new">Add new Campground</a>
+                        <% } else { %>
+                            <a class="nav-link add-campground-link" href="/campgrounds/new">Add new Campground</a>
+                            <% } %>
+                </div>
+                <div class="navbar-nav ms-auto mobile-nav">
+                    <% if(currentUser) {%>
+                        <i><a style="color: gray; cursor:default;" class="nav-link" href="#">
+                                <%= currentUser.username %>
+                            </a></i>
+                        <a class="nav-link" href="/logout">Logout</a>
+                        <% } else{ %>
+                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link register-btn" href="/register">Create an account</a>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

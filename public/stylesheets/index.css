@@ -1,0 +1,39 @@
+.outer {
+    border: 1px solid rgba(128, 128, 128, 0.394);
+    padding: 20px;
+    min-height: 400px;
+    border-radius: 5px;
+    margin: 10px;
+    background-color: #fbfbfb;
+}
+
+.outer:hover {
+    background-color: #fff;
+}
+
+.camp-img {
+    border-radius: 5px;
+}
+
+.camp-title {
+    padding-top: 15px;
+    font-weight: 600;
+}
+
+.camp-desc {
+    color: rgb(128, 128, 128);
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.camp-btn {
+    border: 1px solid rgba(128, 128, 128, 0.394);
+    /* padding: 10px 100px 10px 100px; */
+    width: 100%;
+    font-weight: 600;
+}
+
+.camp-btn:hover {
+    border: 1px solid rgba(128, 128, 128, 0.394);
+    background-color: #fff;
+}

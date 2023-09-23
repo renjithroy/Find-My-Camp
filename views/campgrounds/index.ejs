@@ -1,0 +1,36 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="stylesheets/index.css">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div id="cluster-map" class="mb-4" style="width: 90%; height: 400px;"></div>
+    </div>
+    <div class="container mb-5">
+    <div class="row">
+        <% for(let campground of campgrounds) {%>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="outer">
+                    <% if(campground.images.length){ %>
+                        <img src="<%= campground.images[0].url %>" alt="" class="img-fluid camp-img">
+                        <% }else{ %>
+                            <img src="https://res.cloudinary.com/djkeah1gc/image/upload/v1679241947/Campscape/tent1_uab2hw.jpg"
+                                class="img-fluid camp-img">
+                            <% } %>
+                                <h6 class="camp-title">
+                                    <%= campground.title %>
+                                </h6>
+                                <p class="camp-desc">
+                                    <%= campground.description.slice(0,75)+".."  %>
+                                </p>
+                                <a href="/campgrounds/<%= campground._id %>" class="btn camp-btn">View Campground</a>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+
+    <script>
+        const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+        const campgrounds = { features:<%-JSON.stringify(campgrounds)%>} //stringify to make send data valid (by default id is not a string, so error)
+    </script>
+
+    <script src="/javascripts/clusterMap.js"></script>

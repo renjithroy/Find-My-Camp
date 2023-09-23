@@ -1,0 +1,43 @@
+<% if (success && success.length) { %>
+    <div class="row" id="success-row">
+        <div class="col-4"></div>
+        <div class="col-4 mb-3 text-center">
+            <div class="alert alert-success alert-dismissible fade show">
+                <%= success %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <script>
+        // Automatically hide the success message and remove the row after 2 seconds
+        setTimeout(function () {
+            var successRow = document.getElementById('success-row');
+            if (successRow) {
+                successRow.remove();
+            }
+        }, 2200);
+    </script>
+    <% } %>
+
+        <% if (error && error.length) { %>
+            <div class="row" id="error-row">
+                <div class="col-3"></div>
+                <div class="col-6 mb-3 text-center">
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <script>
+                // Automatically hide the error message and remove the row after 2 seconds
+                setTimeout(function () {
+                    var errorRow = document.getElementById('error-row');
+                    if (errorRow) {
+                        errorRow.remove();
+                    }
+                }, 3000);
+            </script>
+            <% } %>
