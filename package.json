@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "18.14.0"
+  },
   "name": "campground",
   "version": "1.0.0",
   "description": "",
