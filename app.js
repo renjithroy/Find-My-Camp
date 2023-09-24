@@ -6,12 +6,30 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const connectDB = require('./db'); // Import the connectDB function from db.js
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const MongoDBStore = require("connect-mongo")(session); //using mongo session store instead of memory store
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+(async () => {
+  try {
+    // Connect to the database
+    const dbConnection = await connectDB();
+
+    // Start the Express server after successful database connection
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start the server:', error);
+  }
+})();
 
 // models||tables
 const User = require("./models/user");
@@ -32,17 +50,15 @@ const mongoSanitize = require("express-mongo-sanitize");
 mongoose.set('strictQuery', true);
 
 // mongodb://localhost:27017/yelp-camp
-const dbUrl = process.env.DB_URL;
-mongoose
-  .connect(dbUrl)
-  .then(() => {
-    console.log("Database connected");
-  })
-  .catch((err) => {
-    console.log("Database connection failed :( " + err);
-  });
-
-const app = express();
+// const dbUrl = process.env.DB_URL;
+// mongoose
+//   .connect(dbUrl)
+//   .then(() => {
+//     console.log("Database connected");
+//   })
+//   .catch((err) => {
+//     console.log("Database connection failed :( " + err);
+//   });
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -55,7 +71,7 @@ app.use(mongoSanitize());
 
 //mongodb://localhost:27017/yelp-camp
 const store = new MongoDBStore({
-  url: dbUrl,
+  url: process.env.DB_URL,
   secret: "thisshouldbeabettersecret!",
   touchAfter: 24 * 60 * 60
 })
@@ -91,38 +107,6 @@ passport.use('local', new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser()); //how we store user in session
 passport.deserializeUser(User.deserializeUser()); //how we get that user out of the session
 
-//ADMIN
-// passport.serializeUser(Admin.serializeUser());
-// passport.deserializeUser(Admin.deserializeUser());
-
-// passport.serializeUser(function (user, done) {
-//   if (user instanceof User) {
-//     done(null, user.id);
-//   } else if (user instanceof Admin) {
-//     done(null, user.id);
-//   }
-// });
-
-// passport.deserializeUser(function (id, done) {
-//   User.findById(id, function (err, user) {
-//     if (user) {
-//       done(err, user);
-//     } else {
-//       Admin.findById(id, function (err, user) {
-//         done(err, user);
-//       });
-//     }
-//   });
-// });
-
-
-
-// app.get("/fakeAdmin", async (req, res) => {
-//   const admin = new Admin({ email: "admin@gmail.com", username: "admin" });
-//   const newAdmin = await Admin.register(admin, "admin");
-//   res.send(newAdmin);
-// })
-
 app.use((req, res, next) => {
   res.locals.currentUser = req.user; //on login/register req.user will contain user details
   res.locals.success = req.flash("success"); //we'll have access to locals.variable in our templates
@@ -149,62 +133,4 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-app.listen(3000);
-
-
-// To create two separate session variables for user and admin sides, you can use different session names or keys to store the session data
-
-// const express = require('express');
-// const session = require('express-session');
-
-// const app = express();
-
-// // Set up session middleware for user side
-// const userSessionMiddleware = session({
-//   secret: 'user-side-secret',
-//   resave: false,
-//   saveUninitialized: false,
-//   name: 'userSessionID' // set a different name for the user session cookie
-// });
-// app.use('/user', userSessionMiddleware);
-
-// // Set up session middleware for admin side
-// const adminSessionMiddleware = session({
-//   secret: 'admin-side-secret',
-//   resave: false,
-//   saveUninitialized: false,
-//   name: 'adminSessionID' // set a different name for the admin session cookie
-// });
-// app.use('/admin', adminSessionMiddleware);
-
-// // Routes for user side
-// app.get('/user', (req, res) => {
-//   // Set user session data
-//   req.session.user = {
-//     name: 'John Doe',
-//     email: 'john@example.com'
-//   };
-//   res.send('User session set');
-// });
-
-// app.get('/user/data', (req, res) => {
-//   // Get user session data
-//   const userSessionData = req.session.user;
-//   res.send(userSessionData);
-// });
-
-// // Routes for admin side
-// app.get('/admin', (req, res) => {
-//   // Set admin session data
-//   req.session.admin = {
-//     name: 'Admin',
-//     email: 'admin@example.com'
-//   };
-//   res.send('Admin session set');
-// });
-
-// app.get('/admin/data', (req, res) => {
-//   // Get admin session data
-//   const adminSessionData = req.session.admin;
-//   res.send(adminSessionData);
-// });
+// app.listen(3000);
