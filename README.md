@@ -1,8 +1,8 @@
-# FindMyCamp
+# FindMyCamp 🏕️
 
-![Image 1](https://i.imgur.com/vxlwxfO.png)  
-![Image 2](https://i.imgur.com/RSdHpky.png)  
-![Image 3](https://i.imgur.com/3oU80lM.png)  
+![Image 1](https://i.imgur.com/vxlwxfO.png=250x)  
+![Image 2](https://i.imgur.com/RSdHpky.png=250x)  
+![Image 3](https://i.imgur.com/3oU80lM.png=250x) 
 
 FindMyCamp is your ultimate destination for discovering and managing campgrounds. With FindMyCamp, users can effortlessly create, explore, and review campgrounds, while administrators have the power to oversee and enhance the platform's functionality. FindMyCamp provides a dynamic and user-friendly experience, making camping adventures easier than ever.
 
@@ -34,7 +34,7 @@ cd campground
 npm install
 ```
 
-4. **Set Environment Variables:**:
+4. **Set Environment Variables:**
 Create a .env file in the project's root directory and add the following:  
 
 ```
@@ -58,4 +58,4 @@ To get maps working check [this](https://docs.mapbox.com/) out.
 
 If you have any questions or want to reach out to the me, feel free to contact me at [renjithroy06@gmail.com](mailto:renjithroy06@gmail.com).
 
-### Happy camping with FindMyCamp! 🏕️
+## Happy camping with FindMyCamp! 🏕️
