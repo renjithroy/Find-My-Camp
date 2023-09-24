@@ -1,8 +1,8 @@
 # FindMyCamp 🏕️
 
-![Image 1](https://i.imgur.com/vxlwxfO.png){:width="600px"}
-![Image 2](https://i.imgur.com/RSdHpky.png){:width="600px"}  
-![Image 3](https://i.imgur.com/3oU80lM.png){:width="600px"}  
+![Image 1](https://i.imgur.com/vxlwxfO.png)
+![Image 2](https://i.imgur.com/RSdHpky.png)  
+![Image 3](https://i.imgur.com/3oU80lM.png)
 
 FindMyCamp is a platform for discovering and managing campgrounds. With FindMyCamp, users can effortlessly create, explore, and review campgrounds, while administrators have the power to oversee and enhance the platform's functionality. FindMyCamp provides a dynamic and user-friendly experience, making camping adventures easier than ever.
 
