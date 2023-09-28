@@ -5,7 +5,7 @@
     </div>
     <div class="container mb-5">
     <div class="row">
-        <% for(let campground of campgrounds) {%>
+        <% for(let campground of campgrounds.slice(0, 9)) {%>
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="outer">
                         <% if(campground.images.length){ %>
