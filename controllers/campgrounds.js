@@ -10,21 +10,71 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 //MVC - Models, Views, this is the Controller
 
-module.exports.index = async (req, res) => {
-    const campgrounds = await (await Campground.find({ isVerified: true })).reverse();
-    res.render("campgrounds/index", { campgrounds });
-    
-    // const page = parseInt(req.query.page) || 1;
-    // const limit = 9; // Number of campgrounds per page
-    
-    // Use the `paginate` method to get paginated results
-    // const campgrounds = await Campground.paginate(
-        //     { isVerified: true },
-        //     { page, limit, sort: { createdAt: -1 } }
-        // );
-    // res.render("campgrounds/index", { campgrounds });
+// module.exports.index = async (req, res) => {
+    // const campgrounds = await (await Campground.find({ isVerified: true })).reverse();
+    // const campgrounds = await Campground.find({ isVerified: true }).populate("reviews");
+    // campgrounds.reverse();
 
-}
+    // Create a mapping between campground IDs and average ratings
+    // const avgRatingsMap = new Map();
+
+    // // Calculate average rating for each campground and add it to the mapping
+    // campgrounds.forEach(campground => {
+    //     let avgRating = 0;
+    //     if (campground.reviews.length > 0) {
+    //         const totalRating = campground.reviews.reduce((acc, review) => acc + review.rating, 0);
+    //         avgRating = totalRating / campground.reviews.length;
+    //     }
+
+    //     // Round the average rating to one decimal place
+    //     avgRating = parseFloat(avgRating.toFixed(1));
+
+    //     avgRatingsMap.set(campground._id.toString(), avgRating);
+    // });
+
+    // Pass the campgrounds and average ratings mapping to the template
+    // res.render("campgrounds/index", { campgrounds });
+    // res.render("campgrounds/index", { campgrounds, avgRatingsMap });
+
+// }
+
+module.exports.index = async (req, res) => {
+    try {
+        // Fetch the campgrounds that are verified
+        const campgrounds = await Campground.find({ isVerified: true }).populate("reviews").exec();
+
+        // Calculate the averageRating for each campground and add it to the original campground object
+        campgrounds.forEach((campground) => {
+            let averageRating = 0;
+
+            if (campground.reviews.length > 0) {
+                const totalRating = campground.reviews.reduce((acc, review) => acc + review.rating, 0);
+                averageRating = totalRating / campground.reviews.length;
+            }
+
+            // To prevent 3 from becoming 3.0
+            if (!Number.isInteger(averageRating)) {
+                averageRating = averageRating.toFixed(1);
+            }
+
+            // Add the averageRating field to the original campground object
+            campground.averageRating = averageRating;
+        });
+
+        // Reverse the campgrounds if needed
+        campgrounds.reverse();
+
+        // Render the view with the campgrounds data
+        res.render("campgrounds/index", { campgrounds });
+    } catch (error) {
+        console.error(error);
+        // Handle errors as needed
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+
 
 module.exports.renderNewForm = (req, res) => {
     res.render("campgrounds/new");
@@ -63,7 +113,7 @@ module.exports.showCampgrounds = async (req, res) => {
     }
 
     //to prevent 3 from becoming 3.0
-    if (!Number.isInteger(averageRating)){
+    if (!Number.isInteger(averageRating)) {
         averageRating = averageRating.toFixed(1);
     }
 
