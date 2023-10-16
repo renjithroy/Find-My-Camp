@@ -43,6 +43,7 @@ const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
+const subscriberRoutes = require("./routes/subscriber");
 
 const mongoSanitize = require("express-mongo-sanitize");
 //sudo lsof -i :3000
@@ -118,6 +119,7 @@ app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
+app.use("/", subscriberRoutes);
 
 app.get("/", (req, res) => {
   res.render("campgrounds/home");

@@ -1,42 +1,74 @@
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 15%;
+        left: 85%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align: middle;
+        width: 100%;
+        max-width: 350px;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 16px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        animation: borderAnimation 4s linear infinite;
+        /* Add an animation to the alert */
+        opacity: 1;
+        transition: opacity 0.5s;
+    }
+
+    .custom-alert.success {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+
+    .custom-alert.error {
+        background-color: #ec1f1f;
+        color: #fff;
+    }
+
+    .custom-alert .close-button {
+        position: absolute;
+        left: 14px;
+        cursor: pointer;
+    }
+</style>
+
 <% if (success && success.length) { %>
-    <div class="row" id="success-row">
-        <div class="col-4"></div>
-        <div class="col-4 mb-3 text-center">
-            <div class="alert alert-success alert-dismissible fade show">
-                <%= success %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        <div class="col-4"></div>
+    <div class="custom-alert success">
+        <%= success %>
     </div>
     <script>
-        // Automatically hide the success message and remove the row after 2 seconds
+        // Automatically close the success message after 4 seconds
         setTimeout(function () {
-            var successRow = document.getElementById('success-row');
-            if (successRow) {
-                successRow.remove();
+            var successAlert = document.querySelector('.custom-alert.success');
+            if (successAlert) {
+                successAlert.style.opacity = 0;
+                setTimeout(function () {
+                    successAlert.remove();
+                }, 500);
             }
-        }, 2200);
+        }, 4000);
     </script>
     <% } %>
 
         <% if (error && error.length) { %>
-            <div class="row" id="error-row">
-                <div class="col-3"></div>
-                <div class="col-6 mb-3 text-center">
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <%= error %>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-                <div class="col-3"></div>
+            <div class="custom-alert error">
+                <%= error %>
             </div>
             <script>
-                // Automatically hide the error message and remove the row after 2 seconds
+                // Automatically close the error message after 4 seconds
                 setTimeout(function () {
-                    var errorRow = document.getElementById('error-row');
-                    if (errorRow) {
-                        errorRow.remove();
+                    var errorAlert = document.querySelector('.custom-alert.error');
+                    if (errorAlert) {
+                        errorAlert.style.opacity = 0;
+                        setTimeout(function () {
+                            errorAlert.remove();
+                        }, 500);
                     }
                 }, 3000);
             </script>

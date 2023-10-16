@@ -1,7 +1,115 @@
 <% layout('layouts/boilerplate') %>
+    <style>
+        button.expand {
+            --button-height: 48px;
+            overflow: hidden;
+            outline: none;
+            background-color: #1f2024;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-size: 1em;
+            border: none;
+            color: white;
+            font-family: "Nunito", sans-serif;
+            cursor: pointer;
+            position: relative;
+            transition: padding 0.3s;
+        }
 
-    <div class="row">
-        <h1 class="text-center">New Campground</h1>
+        .expand-icon {
+            --icon-size: 10px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: var(--button-height);
+            width: var(--button-height);
+            border-left: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateX(calc(var(--button-height) + 1px));
+            transition: transform 0.3s;
+        }
+
+        .expand-icon>svg {
+            height: var(--icon-size);
+            width: var(--icon-size);
+            transform: scale(1.5);
+            transition: transform 0.3s;
+        }
+
+        .expand-icon>svg.second {
+            display: none;
+            transform: scale(0) translateY(50px);
+            transition: transform 0.3s;
+        }
+
+        button.expand:hover,
+        button.expand.loading {
+            padding-right: calc(25px + var(--button-height));
+        }
+
+        button.expand:hover>.expand-icon,
+        button.expand.loading>.expand-icon {
+            transform: translateX(0);
+            transition: transform 0.3s 0.05s;
+        }
+
+        button.expand.loading>.expand-icon>svg {
+            transform: scale(0);
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: scale(0.3) rotateZ(0deg);
+            }
+
+            100% {
+                transform: scale(0.3) rotateZ(360deg);
+            }
+        }
+
+        .loader {
+            --loader-size: 52px;
+            height: var(--loader-size);
+            width: var(--loader-size);
+            border: 4px solid white;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            background-color: transparent;
+            border-radius: 50%;
+            animation: rotate 1.5s linear infinite;
+            position: absolute;
+            right: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s 0.3s;
+        }
+
+        button.expand.loading>span>span.loader {
+            opacity: 1;
+        }
+
+        button.expand.loaded>span>span.loader {
+            opacity: 0 !important;
+        }
+
+        button.expand.loaded>.expand-icon>svg.first {
+            display: none;
+        }
+
+        button.expand.loaded>.expand-icon>svg.second {
+            display: block;
+        }
+
+        button.expand.finished>.expand-icon>svg.second {
+            transform: scale(1.5) translateY(0px);
+        }
+    </style>
+
+    <div class="row mb-5">
+        <h1 class="text-center mt-5">New Campground</h1>
         <div class="col-md-6 offset-md-3">
             <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3">
@@ -36,18 +144,32 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
-                    <!-- <div class="invalid-feedback">
-                        Enter a description
-                    </div> -->
                 </div>
-                <div class="mb-3">
+                <div class="mb-5">
                     <label for="formFileMultiple" class="form-label">Upload images</label>
                     <input class="form-control" type="file" name="image" id="formFileMultiple" multiple>
                 </div>
-                <div class="mb-3">
-                    <button class="btn btn-success">Add Campground</button>
+                <div class="mb-5 pb-2">
+                    <!-- <button class="btn btn-success">Add Campground</button> -->
+                    <main>
+                        <button class="expand">
+                            Add New Campground
+                            <span class="expand-icon expand-hover">
+                                <svg class="first" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 32 32"
+                                    version="1.1">
+                                    <path
+                                        d="M8.489 31.975c-0.271 0-0.549-0.107-0.757-0.316-0.417-0.417-0.417-1.098 0-1.515l14.258-14.264-14.050-14.050c-0.417-0.417-0.417-1.098 0-1.515s1.098-0.417 1.515 0l14.807 14.807c0.417 0.417 0.417 1.098 0 1.515l-15.015 15.022c-0.208 0.208-0.486 0.316-0.757 0.316z" />
+                                </svg>
+                                <span class="loader"></span>
+                                <svg class="second" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
+                                    <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 5L8 15l-5-4" />
+                                </svg>
+                            </span>
+                        </button>
+                    </main>
                 </div>
+                
             </form>
-            <a href="/campgrounds">All campgrounds</a>
         </div>
     </div>
