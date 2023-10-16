@@ -39,6 +39,19 @@ router.use(session({
 
 router.get("/dashboard", isAdmin, async(req, res) => {
 
+    //gettting total count of each collection
+    const userCount = await User.countDocuments();
+    const adminCount = await Admin.countDocuments();
+    const campgroundCount = await Campground.countDocuments();
+    const reviewCount = await Review.countDocuments();
+
+    let totalCount = {
+        userCount: userCount,
+        adminCount: adminCount,
+        campgroundCount: campgroundCount,
+        reviewCount: reviewCount,
+    }
+
     const campgroundData = await Campground.aggregate([
         {
             $group: {
@@ -67,63 +80,33 @@ router.get("/dashboard", isAdmin, async(req, res) => {
         { $limit: 30 }, // Limit the result to the top 10 most recent records
     ]);
 
+    const campgrounds = await Campground.find({ isVerified: true }).populate("reviews").exec();
 
-    // const topCampgroundData = await Campground.aggregate([
-    //     {
-    //         $lookup: {
-    //             from: "reviews",
-    //             localField: "_id",
-    //             foreignField: "campground",
-    //             as: "reviews"
-    //         }
-    //     },
-    //     {
-    //         $project: {
-    //             title: 1,
-    //             images: 1,
-    //             geometry: 1,
-    //             price: 1,
-    //             description: 1,
-    //             location: 1,
-    //             author: 1,
-    //             isVerified: 1,
-    //             createdAt: 1,
-    //             updatedAt: 1,
-    //             __v: 1,
-    //             averageRating: {
-    //                 $cond: {
-    //                     if: { $gt: [{ $size: "$reviews" }, 0] }, // Check if there are reviews
-    //                     then: {
-    //                         $avg: "$reviews.rating"
-    //                     },
-    //                     else: "no ratings" // No reviews, set averageRating to null
-    //                 }
-    //             }
-    //         }
-    //     },
-    //     {
-    //         $sort: { averageRating: -1 }
-    //     }
-    // ]);
+    // Calculate the averageRating for each campground and add it to the original campground object
+    campgrounds.forEach((campground) => {
+        let averageRating = 0;
 
-    // console.log(topCampgroundData);
+        if (campground.reviews.length > 0) {
+            const totalRating = campground.reviews.reduce((acc, review) => acc + review.rating, 0);
+            averageRating = totalRating / campground.reviews.length;
+        }
 
+        // To prevent 3 from becoming 3.0
+        if (!Number.isInteger(averageRating)) {
+            averageRating = averageRating.toFixed(1);
+        }
 
+        // Add the averageRating field to the original campground object
+        campground.averageRating = averageRating;
+    });
 
-    //gettting total count of each collection
-    const userCount = await User.countDocuments();
-    const adminCount = await Admin.countDocuments();
-    const campgroundCount = await Campground.countDocuments();
-    const reviewCount = await Review.countDocuments();
+    // Sort the campgrounds by averageRating in descending order
+    campgrounds.sort((a, b) => b.averageRating - a.averageRating);
 
-    let totalCount = {
-        userCount: userCount,
-        adminCount: adminCount,
-        campgroundCount: campgroundCount,
-        reviewCount: reviewCount,
-    }
+    // Get the top 5 campgrounds
+    const top5Campgrounds = campgrounds.slice(0, 5);
 
-    res.render("admin/index", {campgroundData, totalCount});
+    res.render("admin/index", {campgroundData, totalCount, top5Campgrounds});
 })
 
 //serve login form
