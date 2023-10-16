@@ -48,7 +48,8 @@
                         <!-- Content Row -->
                         <div class="row">
 
-                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'campgrounds';" role="button">
+                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'campgrounds';"
+                                role="button">
                                 <div class="card border-left-primary shadow h-100 py-2">
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
@@ -67,7 +68,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'campgrounds/reviews';" role="button">
+                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'campgrounds/reviews';"
+                                role="button">
                                 <div class="card border-left-warning shadow h-100 py-2">
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
@@ -105,7 +107,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'admins';" role="button">
+                            <div class="col-xl-3 col-md-6 mb-4" onclick="window.location.href = 'admins';"
+                                role="button">
                                 <div class="card border-left-danger shadow h-100 py-2">
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
@@ -126,7 +129,7 @@
 
                         </div>
 
-                        
+
 
                         <!-- Content Row -->
 
@@ -150,141 +153,174 @@
                                 </div>
                             </div>
 
-                            <!-- Pie Chart -->
+                            <!-- Top Rated Campgrounds -->
                             <div class="col-xl-4 col-lg-5">
+
                                 <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div
-                                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Top Rated Campgrounds</h6>
                                     </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                        <div class="chart-pie pt-4 pb-2">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                        <div class="mt-4 text-center small">
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-primary"></i> Direct
-                                            </span>
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-success"></i> Social
-                                            </span>
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle text-info"></i> Referral
-                                            </span>
-                                        </div>
-                                    </div>
-                            </div>
-                            </div>
-                        </div>
-
-                            <!-- Content Row -->
-                            <div class="row">
-
-                                <!-- Content Column -->
-                                <div class="col-lg-6 mb-4">
-
-                                    <!-- Project Card Example -->
-                                    <div class="card shadow mb-4">
-                                        <div class="card-header py-3">
-                                            <h6 class="m-0 font-weight-bold text-primary">Top Rated Campgrounds</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <% top5Campgrounds.forEach((campground)=> { %>
-                                                <h4 class="small font-weight-bold">
-                                                    <a href="/campgrounds/<%= campground._id %>">
-                                                        <%= campground.title %>
-                                                    </a>
-                                                    <span class="float-right">
-                                                        <%= campground.averageRating %>
-                                                    </span>
-                                                </h4>
-                                                <div class="progress mb-4">
-                                                    <% if (campground.averageRating>= 4.5) { %>
-                                                        <div class="progress-bar bg-success" role="progressbar"
+                                    <div class="card-body">
+                                        <% top5Campgrounds.forEach((campground)=> { %>
+                                            <h4 class="small font-weight-bold">
+                                                <a href="/campgrounds/<%= campground._id %>">
+                                                    <%= campground.title %>
+                                                </a>
+                                                <span class="float-right">
+                                                    <%= campground.averageRating %>
+                                                </span>
+                                            </h4>
+                                            <div class="progress mb-4">
+                                                <% if (campground.averageRating>= 4.5) { %>
+                                                    <div class="progress-bar bg-success" role="progressbar"
+                                                        style="width:<%= (campground.averageRating / 5) * 100 %>%"
+                                                        aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5"></div>
+                                                    <% } else if (campground.averageRating>= 4.0) { %>
+                                                        <div class="progress-bar bg-info" role="progressbar"
                                                             style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                             aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5"></div>
-                                                        <% } else if (campground.averageRating>= 4.0) { %>
-                                                            <div class="progress-bar bg-info" role="progressbar"
+                                                        <% } else if (campground.averageRating>= 3.0) { %>
+                                                            <div class="progress-bar bg-warning" role="progressbar"
                                                                 style="width:<%= (campground.averageRating / 5) * 100 %>%"
-                                                                aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5"></div>
-                                                            <% } else if (campground.averageRating>= 3.0) { %>
-                                                                <div class="progress-bar bg-warning" role="progressbar"
+                                                                aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
+                                                            </div>
+                                                            <% } else if (campground.averageRating>= 2.0) { %>
+                                                                <div class="progress-bar" role="progressbar"
+                                                                    style="width:<%= (campground.averageRating / 5) * 100 %>%; background-color: #ffa534;"
+                                                                    aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
+                                                                </div>
+                                                            <% } else { %>
+                                                                <div class="progress-bar bg-danger" role="progressbar"
                                                                     style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                                     aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
                                                                 </div>
-                                                                <% } else { %>
-                                                                    <div class="progress-bar bg-danger" role="progressbar"
-                                                                        style="width:<%= (campground.averageRating / 5) * 100 %>%"
-                                                                        aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
-                                                                    </div>
-                                                                    <% } %>
-                                                </div>
-                                                <% }); %>
+                                                                <% } %>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Content Row -->
+                        <div class="row">
+
+                            <!-- Content Column -->
+                            <div class="col-lg-5 mb-4">
+
+                                <!-- User Ratings Distribution -->
+                                
+                                <div class="card shadow mb-4">
+                                    <!-- Card Body -->
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">User Ratings Distribution
+                                        </h6>
+                                    </div>
+                                    <div class="card-body" style="padding-bottom: 64px;">
+                                        <div class="chart-pie">
+                                            <canvas id="myPieChart"></canvas>
                                         </div>
                                     </div>
-
-
-
-
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
-                        <!-- /.container-fluid -->
 
                     </div>
-                    <!-- End of Main Content -->
-
-                    <%- include("../partials/adminFooter") %>
+                    <!-- /.container-fluid -->
 
                 </div>
-                <!-- End of Content Wrapper -->
+                <!-- End of Main Content -->
+
+                <%- include("../partials/adminFooter") %>
 
             </div>
-            <!-- End of Page Wrapper -->
+            <!-- End of Content Wrapper -->
 
-            <!-- Scroll to Top Button-->
-            <a class="scroll-to-top rounded" href="#page-top">
-                <i class="fas fa-angle-up"></i>
-            </a>
+    </div>
+    <!-- End of Page Wrapper -->
 
-            <script>
-                var campgroundData = <%-JSON.stringify(campgroundData)%> //no spaces
-            </script>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <script>
+        var campgroundData = <%-JSON.stringify(campgroundData)%> //no spaces
+    </script>
 
 
-            <!-- Bootstrap core JavaScript-->
-            <script src="/vendor/jquery/jquery.min.js"></script>
-            <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-            <!-- Core plugin JavaScript-->
-            <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-            <!-- Custom scripts for all pages-->
-            <script src="/js/sb-admin-2.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin-2.min.js"></script>
 
-            <!-- Page level plugins -->
-            <script src="/vendor/chart.js/Chart.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="/vendor/chart.js/Chart.min.js"></script>
 
-            <!-- Page level custom scripts -->
-            <script src="/js/demo/chart-area-demo.js"></script>
-            <script src="/js/demo/chart-pie-demo.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="/js/demo/chart-area-demo.js"></script>
+
+    <script>
+        var ratingsPercentage = <%-JSON.stringify(ratingsPercentage)%>
+        console.log(ratingsPercentage);
+        // Get the canvas element for the pie chart
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+        var pieChartCanvas = document.getElementById('myPieChart');
+
+        // Create the pie chart using Chart.js
+        const myPieChart = new Chart(pieChartCanvas, {
+            type: 'doughnut', // Use a doughnut chart for a pie chart
+            data: {
+                // labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], // Update the labels
+                datasets: [{
+                    data: ratingsPercentage,
+                    backgroundColor: [
+                        '#ff4545', // Color for 1 Star
+                        '#ffa534', // Color for 2 Stars
+                        '#ffe234', // Color for 3 Stars
+                        '#b7dd29',  // Color for 4 Stars
+                        '#57e32c'  // Color for 5 Stars
+                    ],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: true,
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            const rating = data.labels[tooltipItem.index];
+                            const percentage = data.datasets[0].data[tooltipItem.index];
+                            return `${rating}: ${((percentage)*100).toFixed(2)}%`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                    display: true,
+                },
+                cutoutPercentage: 70,
+                responsive: true,
+            },
+        });
+
+    </script>
 
 </body>
 

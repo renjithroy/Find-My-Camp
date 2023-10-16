@@ -66,6 +66,7 @@
                                                     <th>Author</th>
                                                     <th>Location</th>
                                                     <th>Price</th>
+                                                    <th>View</th>
                                                     <th>Edit</th>
                                                     <th>Delete</th>
                                                 </tr>
@@ -77,6 +78,7 @@
                                                     <th>Author</th>
                                                     <th>Location</th>
                                                     <th>Price</th>
+                                                    <th>View</th>
                                                     <th>Edit</th>
                                                     <th>Delete</th>
                                                 </tr>
@@ -100,6 +102,12 @@
                                                         </td>
                                                         <td>
                                                             ₹<%= campground.price %>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/campgrounds/<%= campground._id %>" 
+                                                                class="btn btn-success btn-sm btn-icon-split">
+                                                                <span class="text">View</span>
+                                                            </a>
                                                         </td>
                                                         <td>
                                                             <a href="/admin/campgrounds/<%= campground._id %>/edit"

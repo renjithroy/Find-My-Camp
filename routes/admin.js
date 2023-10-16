@@ -19,6 +19,7 @@ const upload = multer({ storage }) //asking multer to store in cloudinary
 const { cloudinary } = require("../cloudinary");
 
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const campground = require("../models/campground");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
@@ -37,7 +38,7 @@ router.use(session({
     saveUninitialized: true,
 }));
 
-router.get("/dashboard", isAdmin, async(req, res) => {
+router.get("/dashboard", isAdmin, async (req, res) => {
 
     //gettting total count of each collection
     const userCount = await User.countDocuments();
@@ -100,13 +101,42 @@ router.get("/dashboard", isAdmin, async(req, res) => {
         campground.averageRating = averageRating;
     });
 
+    //Pie chart data for ratings percentage of all campgrounds
+    const campgroundRatings = campgrounds.map(campground => campground.averageRating);
+    // const campgroundRatings = await Campground.find({ isVerified: true, 'reviews.0': { $exists: true } });
+
+    // Calculate the percentage of campgrounds for each rating (e.g., 5 stars, 4 stars, etc.)
+    const ratingsCount = [0, 0, 0, 0, 0]; // Initialize an array to count ratings (0-5 stars)
+
+    campgroundRatings.forEach(rating => {
+        // Count the number of campgrounds for each rating
+        // ratingsCount[rating - 1]++;
+        // Update the correct index based on the rating
+        if (rating === 1) {
+            ratingsCount[4]++;
+        } else if (rating === 2) {
+            ratingsCount[3]++;
+        } else if (rating === 3) {
+            ratingsCount[2]++;
+        } else if (rating === 4) {
+            ratingsCount[1]++;
+        } else if (rating === 5) {
+            ratingsCount[0]++;
+        }
+    });
+
+    // Calculate the percentage of campgrounds for each rating
+    const totalCampgrounds = campgroundRatings.length;
+    const ratingsPercentage = ratingsCount.map(count => (count / totalCampgrounds) * 100);
+
+    // Top Rated Camps
     // Sort the campgrounds by averageRating in descending order
     campgrounds.sort((a, b) => b.averageRating - a.averageRating);
 
     // Get the top 5 campgrounds
     const top5Campgrounds = campgrounds.slice(0, 5);
 
-    res.render("admin/index", {campgroundData, totalCount, top5Campgrounds});
+    res.render("admin/index", { campgroundData, totalCount, top5Campgrounds, ratingsPercentage });
 })
 
 //serve login form
@@ -204,7 +234,7 @@ router.get("/campgrounds/pending", isAdmin, async (req, res) => {
 
 //get reviews
 router.get("/campgrounds/reviews", isAdmin, async (req, res) => {
-    const campgrounds = await Campground.find({ isVerified: true });
+    const campgrounds = await Campground.find({ isVerified: true, 'reviews.0': { $exists: true } });
     res.render("admin/campgroundReviews", { campgrounds });
 })
 
