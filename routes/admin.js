@@ -159,6 +159,7 @@ router.get("/reports", isAdmin, async (req, res) => {
 
 
 
+
 router.get('/reports/generate-pdf', async (req, res) => {
     try {
         const dateRange = req.query.dateRange;
@@ -226,19 +227,19 @@ router.get('/reports/generate-pdf', async (req, res) => {
         const pdfBuffer = await page.pdf();
         await browser.close();
 
-        // Set the Content-Length header
-        res.setHeader('Content-Length', pdfBuffer.length);
+        // Set headers for PDF attachment
+        res.attachment('campgrounds-report.pdf');
+        res.type('application/pdf');
 
-        // Pipe the PDF buffer to the response
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename="campgrounds-report.pdf"');
-        res.end(pdfBuffer);
+        // Send the PDF as the response
+        res.send(pdfBuffer);
 
     } catch (error) {
         console.error('Error generating PDF:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
