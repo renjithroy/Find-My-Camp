@@ -1,5 +1,5 @@
 const express = require("express");
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const passport = require("passport");
 const router = express.Router();
 const Admin = require("../models/admin");
@@ -157,9 +157,6 @@ router.get("/reports", isAdmin, async (req, res) => {
     }
 });
 
-
-
-
 router.get('/reports/generate-pdf', async (req, res) => {
     try {
         const dateRange = req.query.dateRange;
@@ -221,7 +218,10 @@ router.get('/reports/generate-pdf', async (req, res) => {
         `;
 
         // Use puppeteer to generate PDF
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_BIN, // This environment variable is set by Heroku
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
         const page = await browser.newPage();
         await page.setContent(html);
         const pdfBuffer = await page.pdf();
