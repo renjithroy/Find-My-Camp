@@ -56,8 +56,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold text-primary" style="display: inline;">Pick a Date Range</h6>
-                                    <button id="exportButton" class="btn btn-danger btn-sm" style="float: right;"><i class="fas fa-solid fa-file-pdf"></i> PDF</button>
+                                    <h6 class="font-weight-bold text-primary">Pick a Date Range</h6>
                                     <form action="/admin/reports" method="GET" class="mt-4">
                                         <div class="input-group pb-3">
                                             <input type="text" name="dateRange" id="dateRange" class="form-control" />
@@ -192,37 +191,6 @@
             });
         });
     </script>
-
-    <!-- Export PDF Button -->
-    <script>
-        document.getElementById('exportButton').addEventListener('click', async () => {
-            try {
-                // Add loading spinner to the export button
-                const exportButton = document.getElementById('exportButton');
-                exportButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-
-                const dateRange = document.getElementById('dateRange').value;
-                const response = await fetch(`/admin/reports/generate-pdf?dateRange=${dateRange}`);
-                const blob = await response.blob();
-
-                // Create a download link and trigger the download
-                const downloadLink = document.createElement('a');
-                downloadLink.href = window.URL.createObjectURL(blob);
-                downloadLink.download = 'exported-report.pdf';
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-
-                // Reset the export button after the download is complete
-                exportButton.innerHTML = '<i class="fas fa-solid fa-file-pdf"></i> PDF';
-            } catch (error) {
-                console.error('Error exporting PDF:', error);
-                // Reset the export button in case of an error
-                exportButton.innerHTML = '<i class="fas fa-solid fa-file-pdf"></i> PDF';
-            }
-        });
-    </script>
-
 
 </body>
 
