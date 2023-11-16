@@ -223,6 +223,12 @@ router.get('/reports/generate-pdf', async (req, res) => {
                 console.error('Error generating PDF:', err);
                 res.status(500).send('Internal Server Error');
             } else {
+                // Get the content length of the PDF stream
+                const contentLength = stream.length;
+
+                // Set the Content-Length header
+                res.setHeader('Content-Length', contentLength);
+
                 // Pipe the PDF stream to the response
                 res.setHeader('Content-Type', 'application/pdf');
                 res.setHeader('Content-Disposition', 'attachment; filename="campgrounds-report.pdf"');
