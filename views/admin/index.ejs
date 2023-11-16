@@ -33,7 +33,7 @@
             <div id="content-wrapper" class="d-flex flex-column pt-5">
 
                 <!-- Main Content -->
-                <div id="content">
+                <div id="content" style="min-height: 100vh;">
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
@@ -129,11 +129,9 @@
 
                         </div>
 
-
-
                         <!-- Content Row -->
 
-                        <div class="row">
+                        <div class="row mt-4">
 
                             <!-- Area Chart -->
                             <div class="col-xl-8 col-lg-7">
@@ -175,55 +173,31 @@
                                                     <div class="progress-bar bg-success" role="progressbar"
                                                         style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                         aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5"></div>
-                                                    <% } else if (campground.averageRating>= 4.0) { %>
+                                                <% } else if (campground.averageRating>= 4.0) { %>
                                                         <div class="progress-bar bg-info" role="progressbar"
                                                             style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                             aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5"></div>
-                                                        <% } else if (campground.averageRating>= 3.0) { %>
+                                                <% } else if (campground.averageRating>= 3.0) { %>
                                                             <div class="progress-bar bg-warning" role="progressbar"
                                                                 style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                                 aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
                                                             </div>
-                                                            <% } else if (campground.averageRating>= 2.0) { %>
+                                                <% } else if (campground.averageRating>= 2.0) { %>
                                                                 <div class="progress-bar" role="progressbar"
                                                                     style="width:<%= (campground.averageRating / 5) * 100 %>%; background-color: #ffa534;"
                                                                     aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
                                                                 </div>
-                                                            <% } else { %>
+                                                <% } else { %>
                                                                 <div class="progress-bar bg-danger" role="progressbar"
                                                                     style="width:<%= (campground.averageRating / 5) * 100 %>%"
                                                                     aria-valuenow="<%= campground.averageRating %>" aria-valuemin="0" aria-valuemax="5">
                                                                 </div>
-                                                                <% } %>
+                                                <% } %>
                                             </div>
                                             <% }); %>
                                     </div>
                                 </div>
                                 
-                            </div>
-                        </div>
-
-                        <!-- Content Row -->
-                        <div class="row">
-
-                            <!-- Content Column -->
-                            <div class="col-lg-5 mb-4">
-
-                                <!-- User Ratings Distribution -->
-                                
-                                <div class="card shadow mb-4">
-                                    <!-- Card Body -->
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">User Ratings Distribution
-                                        </h6>
-                                    </div>
-                                    <div class="card-body" style="padding-bottom: 64px;">
-                                        <div class="chart-pie">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 
@@ -266,61 +240,6 @@
 
     <!-- Page level custom scripts -->
     <script src="/js/demo/chart-area-demo.js"></script>
-
-    <script>
-        var ratingsPercentage = <%-JSON.stringify(ratingsPercentage)%>
-        console.log(ratingsPercentage);
-        // Get the canvas element for the pie chart
-        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#858796';
-        var pieChartCanvas = document.getElementById('myPieChart');
-
-        // Create the pie chart using Chart.js
-        const myPieChart = new Chart(pieChartCanvas, {
-            type: 'doughnut', // Use a doughnut chart for a pie chart
-            data: {
-                // labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
-                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], // Update the labels
-                datasets: [{
-                    data: ratingsPercentage,
-                    backgroundColor: [
-                        '#ff4545', // Color for 1 Star
-                        '#ffa534', // Color for 2 Stars
-                        '#ffe234', // Color for 3 Stars
-                        '#b7dd29',  // Color for 4 Stars
-                        '#57e32c'  // Color for 5 Stars
-                    ],
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: true,
-                    caretPadding: 10,
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            const rating = data.labels[tooltipItem.index];
-                            const percentage = data.datasets[0].data[tooltipItem.index];
-                            return `${rating}: ${((percentage)*100).toFixed(2)}%`;
-                        }
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                    display: true,
-                },
-                cutoutPercentage: 70,
-                responsive: true,
-            },
-        });
-
-    </script>
 
 </body>
 

@@ -1,4 +1,5 @@
 const express = require("express");
+const pdf = require('html-pdf');
 const passport = require("passport");
 const router = express.Router();
 const Admin = require("../models/admin");
@@ -40,11 +41,14 @@ router.use(session({
 
 router.get("/dashboard", isAdmin, async (req, res) => {
 
-    //gettting total count of each collection
-    const userCount = await User.countDocuments();
-    const adminCount = await Admin.countDocuments();
-    const campgroundCount = await Campground.countDocuments();
-    const reviewCount = await Review.countDocuments();
+    // Use Promise.all for parallel database queries
+    // Gettting total count of each collection
+    const [userCount, adminCount, campgroundCount, reviewCount] = await Promise.all([
+        User.countDocuments(),
+        Admin.countDocuments(),
+        Campground.countDocuments(),
+        Review.countDocuments()
+    ]);
 
     let totalCount = {
         userCount: userCount,
@@ -101,34 +105,6 @@ router.get("/dashboard", isAdmin, async (req, res) => {
         campground.averageRating = averageRating;
     });
 
-    //Pie chart data for ratings percentage of all campgrounds
-    const campgroundRatings = campgrounds.map(campground => campground.averageRating);
-    // const campgroundRatings = await Campground.find({ isVerified: true, 'reviews.0': { $exists: true } });
-
-    // Calculate the percentage of campgrounds for each rating (e.g., 5 stars, 4 stars, etc.)
-    const ratingsCount = [0, 0, 0, 0, 0]; // Initialize an array to count ratings (0-5 stars)
-
-    campgroundRatings.forEach(rating => {
-        // Count the number of campgrounds for each rating
-        // ratingsCount[rating - 1]++;
-        // Update the correct index based on the rating
-        if (rating === 1) {
-            ratingsCount[4]++;
-        } else if (rating === 2) {
-            ratingsCount[3]++;
-        } else if (rating === 3) {
-            ratingsCount[2]++;
-        } else if (rating === 4) {
-            ratingsCount[1]++;
-        } else if (rating === 5) {
-            ratingsCount[0]++;
-        }
-    });
-
-    // Calculate the percentage of campgrounds for each rating
-    const totalCampgrounds = campgroundRatings.length;
-    const ratingsPercentage = ratingsCount.map(count => (count / totalCampgrounds) * 100);
-
     // Top Rated Camps
     // Sort the campgrounds by averageRating in descending order
     campgrounds.sort((a, b) => b.averageRating - a.averageRating);
@@ -136,8 +112,130 @@ router.get("/dashboard", isAdmin, async (req, res) => {
     // Get the top 5 campgrounds
     const top5Campgrounds = campgrounds.slice(0, 5);
 
-    res.render("admin/index", { campgroundData, totalCount, top5Campgrounds, ratingsPercentage });
+    res.render("admin/index", { campgroundData, totalCount, top5Campgrounds });
 })
+
+router.get("/reports", isAdmin, async (req, res) => {
+    let notFoundError = null;
+    // If date range is selected
+    if (req.query.dateRange) {
+
+        // Assuming dateRange is the query parameter value
+        const dateRange = req.query.dateRange;
+
+        // Split the dateRange into an array using ' - ' as the separator
+        const dateRangeArray = dateRange.split(' - ');
+
+        // Extract startDate and endDate from the array
+        const startDateString = dateRangeArray[0];
+        const endDateString = dateRangeArray[1];
+
+        // Parse the date strings into Date objects
+        const startDate = new Date(startDateString);
+        const endDate = new Date(endDateString);
+
+        try {
+            // MongoDB query here
+            const campgrounds = await Campground.find({ createdAt: { $gte: startDate, $lte: endDate } }).populate("author").exec();
+
+            if (campgrounds.length === 0) {
+                notFoundError = "No campgrounds found for the given date range";
+            }
+
+            res.render("admin/reports", { campgrounds, notFoundError });
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            // Handle the error and render an error page or message
+            res.status(500).send("Internal Server Error");
+        }
+
+    } else { // When reports page is loaded without selecting a date range
+
+        // If no date parameters are provided, render the reports page without filtering
+        const campgrounds = []; // Or retrieve your campgrounds data using your existing logic
+        res.render("admin/reports", { campgrounds, notFoundError });
+    }
+});
+
+router.get('/reports/generate-pdf', async (req, res) => {
+    try {
+        const dateRange = req.query.dateRange;
+        const [startDateString, endDateString] = dateRange.split(' - ');
+
+        // Parse the date strings into Date objects
+        const startDate = new Date(startDateString);
+        const endDate = new Date(endDateString);
+
+        // Fetch data from the database or any other source based on the date range
+        const campgrounds = await Campground.find({ createdAt: { $gte: startDate, $lte: endDate } }).populate("author").exec();
+
+        // Create an HTML table
+        const html = `
+            <html>
+            <head>
+                <style>
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h2 style="text-align: center;">Campground Report</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Author</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${campgrounds.map(campground => `
+                            <tr>
+                                <td>${campground.title}</td>
+                                <td>${campground.description}</td>
+                                <td>${campground.author.username}</td>
+                                <td>${campground.location}</td>
+                                <td>₹${campground.price}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+        `;
+
+        // Convert HTML to PDF
+        pdf.create(html).toStream((err, stream) => {
+            if (err) {
+                console.error('Error generating PDF:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                // Pipe the PDF stream to the response
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'attachment; filename="campgrounds-report.pdf"');
+                stream.pipe(res);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 //serve login form
 router.get("/login", (req, res) => {
