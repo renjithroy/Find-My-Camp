@@ -1,5 +1,4 @@
 const express = require("express");
-const puppeteer = require('puppeteer-core');
 const passport = require("passport");
 const router = express.Router();
 const Admin = require("../models/admin");
