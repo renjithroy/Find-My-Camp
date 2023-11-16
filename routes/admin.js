@@ -1,5 +1,5 @@
 const express = require("express");
-const pdf = require('html-pdf');
+const puppeteer = require('puppeteer');
 const passport = require("passport");
 const router = express.Router();
 const Admin = require("../models/admin");
@@ -157,6 +157,8 @@ router.get("/reports", isAdmin, async (req, res) => {
     }
 });
 
+
+
 router.get('/reports/generate-pdf', async (req, res) => {
     try {
         const dateRange = req.query.dateRange;
@@ -217,29 +219,27 @@ router.get('/reports/generate-pdf', async (req, res) => {
             </html>
         `;
 
-        // Convert HTML to PDF
-        pdf.create(html).toStream((err, stream) => {
-            if (err) {
-                console.error('Error generating PDF:', err);
-                res.status(500).send('Internal Server Error');
-            } else {
-                // Get the content length of the PDF stream
-                const contentLength = stream.length;
+        // Use puppeteer to generate PDF
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html);
+        const pdfBuffer = await page.pdf();
+        await browser.close();
 
-                // Set the Content-Length header
-                res.setHeader('Content-Length', contentLength);
+        // Set the Content-Length header
+        res.setHeader('Content-Length', pdfBuffer.length);
 
-                // Pipe the PDF stream to the response
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'attachment; filename="campgrounds-report.pdf"');
-                stream.pipe(res);
-            }
-        });
+        // Pipe the PDF buffer to the response
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="campgrounds-report.pdf"');
+        res.end(pdfBuffer);
+
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error generating PDF:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
