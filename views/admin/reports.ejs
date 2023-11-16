@@ -28,6 +28,19 @@
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <style>
+        .loading {
+            position: relative;
+        }
+    
+        .loading .spinner-border {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
 </head>
 
 <body id="page-top">
@@ -60,7 +73,11 @@
                                     <form action="/admin/reports" method="GET" class="mt-4">
                                         <div class="input-group pb-3">
                                             <input type="text" name="dateRange" id="dateRange" class="form-control" />
-                                            <button type="submit" class="btn btn-primary btn-sm px-4 py-1">Get Report</button>
+                                            <!-- <button type="submit" class="btn btn-primary btn-sm px-4 py-1">Get Report</button> -->
+                                            <button type="submit" class="btn btn-primary btn-sm px-4 py-1" id="getReportButton">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                Get Report
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -189,8 +206,14 @@
                     format: 'YYYY-MM-DD' // Set the date format here
                 }
             });
+
+            // Show loading spinner when the form is submitted
+            $('#getReportButton').click(function () {
+                $('.spinner-border').removeClass('d-none');
+            });
         });
     </script>
+
 
 </body>
 
