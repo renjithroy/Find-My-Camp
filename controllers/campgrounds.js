@@ -10,34 +10,6 @@ const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 //MVC - Models, Views, this is the Controller
 
-// module.exports.index = async (req, res) => {
-    // const campgrounds = await (await Campground.find({ isVerified: true })).reverse();
-    // const campgrounds = await Campground.find({ isVerified: true }).populate("reviews");
-    // campgrounds.reverse();
-
-    // Create a mapping between campground IDs and average ratings
-    // const avgRatingsMap = new Map();
-
-    // // Calculate average rating for each campground and add it to the mapping
-    // campgrounds.forEach(campground => {
-    //     let avgRating = 0;
-    //     if (campground.reviews.length > 0) {
-    //         const totalRating = campground.reviews.reduce((acc, review) => acc + review.rating, 0);
-    //         avgRating = totalRating / campground.reviews.length;
-    //     }
-
-    //     // Round the average rating to one decimal place
-    //     avgRating = parseFloat(avgRating.toFixed(1));
-
-    //     avgRatingsMap.set(campground._id.toString(), avgRating);
-    // });
-
-    // Pass the campgrounds and average ratings mapping to the template
-    // res.render("campgrounds/index", { campgrounds });
-    // res.render("campgrounds/index", { campgrounds, avgRatingsMap });
-
-// }
-
 module.exports.index = async (req, res) => {
     try {
         // Fetch the campgrounds that are verified
@@ -72,9 +44,6 @@ module.exports.index = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
-
-
-
 
 module.exports.renderNewForm = (req, res) => {
     res.render("campgrounds/new");
@@ -155,3 +124,50 @@ module.exports.deleteCampground = async (req, res) => {
     req.flash("success", "Campground deleted successfully")
     res.redirect("/campgrounds");
 }
+
+module.exports.searchCampgrounds = async (req, res) => {
+    const { location } = req.query;
+
+    try {
+        const geoData = await geocoder.forwardGeocode({
+            query: location,
+            limit: 1
+        }).send();
+
+        // Check if valid location data is obtained
+        if (!geoData.body.features || geoData.body.features.length === 0) {
+            // No valid location data found
+            req.flash("error", "Invalid location. Please enter a valid location.");
+            return res.redirect("/campgrounds");
+        }
+        // Get detailed place name from mapbox
+        const place_name = geoData.body.features[0].place_name;
+        const coordinates = geoData.body.features[0].geometry.coordinates;
+
+        const nearbyCampgrounds = await Campground.find({
+            geometry: {
+                $near: {
+                    $geometry: {
+                        type: 'Point',
+                        coordinates: coordinates
+                    },
+                    $maxDistance: 100000 // 100 kilometers
+                }
+            }
+        });
+
+        if (nearbyCampgrounds.length === 0) {
+            // No campgrounds found for the given location
+            // req.flash("error", `No campgrounds found near ${place_name}. Try a different location.`);
+            // return res.redirect("/campgrounds");
+            res.render("campgrounds/search", { noResults : true, place_name });
+        }
+
+        res.render("campgrounds/search", { campgrounds: nearbyCampgrounds, place_name, totalResults: nearbyCampgrounds.length, noResults: false, searchCoordinates: coordinates });
+
+    } catch (err) {
+        console.error("Error during geocoding:", err);
+        req.flash("error", "Error finding location. Please try again.");
+        return res.redirect("/campgrounds");
+    }
+};

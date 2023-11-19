@@ -1,14 +1,42 @@
 mapboxgl.accessToken = mapToken;
+
+// We could have coordinates from search page. If its not present or undefined, then we are on the campgrounds page. So we use the default coordinates
+
+if (typeof coordinates === 'undefined') {
+    var coordinates = [-103.5917, 40.6699];
+}
+let zoomlevel;
+
+if (JSON.stringify(coordinates) === JSON.stringify([-103.5917, 40.6699])) {
+    zoomlevel = 3;
+} else {
+    zoomlevel = 10;
+}
+
 const map = new mapboxgl.Map({
     container: 'cluster-map',
-    // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
     style: 'mapbox://styles/mapbox/outdoors-v12',
-    center: [-103.5917, 40.6699],
-    zoom: 3
+    center: coordinates,
+    zoom: zoomlevel
 });
 
 map.addControl(new mapboxgl.NavigationControl())
 
+// Add Geolocate Control to the map
+map.addControl(
+    new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    })
+);
+
+    // Function to toggle the map visibility
+function toggleMap() {
+    const mapContainer = document.getElementById('cluster-map');
+    mapContainer.style.display = mapContainer.style.display === 'none' ? 'block' : 'none';
+}
 
 map.on('load', () => {
     // Add a new source from our GeoJSON data and
@@ -75,7 +103,15 @@ map.on('load', () => {
         filter: ['!', ['has', 'point_count']],
         paint: {
             'circle-color': '#11b4da',
-            'circle-radius': 4,
+            'circle-radius': [
+                'step',
+                ['zoom'],
+                4,      // Radius at zoom level 0
+                10,     // Radius at zoom level 1
+                15,     // Radius at zoom level 2
+                20,     // Radius at zoom level 3
+                25      // Radius at zoom level 4 and above
+            ],
             'circle-stroke-width': 1,
             'circle-stroke-color': '#fff'
         }

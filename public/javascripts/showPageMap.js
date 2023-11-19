@@ -6,8 +6,7 @@ const map = new mapboxgl.Map({
     zoom: 9, // starting zoom
 });
 
-map.addControl(new mapboxgl.NavigationControl())
-
+map.addControl(new mapboxgl.NavigationControl());
 
 new mapboxgl.Marker({ color: 'black' })
     .setLngLat(campground.geometry.coordinates)
@@ -15,7 +14,17 @@ new mapboxgl.Marker({ color: 'black' })
         new mapboxgl.Popup({ offset: 25 })
             .setHTML(
                 `<h5>${campground.title}</h5>
-                <p>${campground.location}</p>`
+                <p>${campground.location}</p>
+                <button class="directions-button" onclick="getDirections()">Get Directions</button>`
             )
     )
     .addTo(map);
+
+// Function to open Google Maps with directions
+function getDirections() {
+    const lat = campground.geometry.coordinates[1];
+    const lng = campground.geometry.coordinates[0];
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, '_blank');
+}
+

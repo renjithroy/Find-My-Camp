@@ -10,8 +10,10 @@ const campgrounds = require("../controllers/campgrounds");
 const { isLoggedIn, validateCampground, isAuthor } = require("../middleware");
 
 router.route("/")
-    .get(catchAsync(campgrounds.index))
+    .get(catchAsync(campgrounds.index),campgrounds.searchCampgrounds)
     .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground));
+
+router.get("/search", campgrounds.searchCampgrounds);
 
 router.get("/new", isLoggedIn, campgrounds.renderNewForm);
 

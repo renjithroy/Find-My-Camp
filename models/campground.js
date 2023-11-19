@@ -47,6 +47,9 @@ const CampgroundSchema = new Schema({
   },
 }, opts);
 
+// Create a 2dsphere index on the geometry field : For search optimization
+CampgroundSchema.index({ geometry: '2dsphere' });
+
 CampgroundSchema.set('timestamps', true);
 // CampgroundSchema.plugin(mongoosePaginate);
 

@@ -8,7 +8,8 @@
     transition: transform .2s;
 }
 
-.outer:hover, .outer:focus {
+.outer:hover,
+.outer:focus {
     background-color: #fff;
     transform: translateY(-0.5em);
 }
@@ -42,4 +43,28 @@
     background-color: black;
     font-weight: 500;
     color: #fff;
+}
+
+#toggleMapButton {
+    padding: 8px 20px;
+    border: 0;
+    border-radius: 100px;
+    background-color: black;
+    color: #ffffff;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+
+#toggleMapButton:hover {
+    background-color: black;
+    box-shadow: 0 0 20px #6fc5ff50;
+    transform: scale(1.1);
+}
+
+#toggleMapButton:active {
+    background-color: black;
+    transition: all 0.25s;
+    -webkit-transition: all 0.25s;
+    box-shadow: none;
+    transform: scale(0.98);
 }
