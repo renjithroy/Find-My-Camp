@@ -32,10 +32,18 @@ map.addControl(
     })
 );
 
-    // Function to toggle the map visibility
+// Function to toggle the map visibility
 function toggleMap() {
     const mapContainer = document.getElementById('cluster-map');
-    mapContainer.style.display = mapContainer.style.display === 'none' ? 'block' : 'none';
+    const buttonText = document.getElementById('toggleMapButtonText');
+
+    if (mapContainer.style.display === 'none') {
+        mapContainer.style.display = 'block';
+        buttonText.innerText = ' Hide Map';
+    } else {
+        mapContainer.style.display = 'none';
+        buttonText.innerText = ' Show Map';
+    }
 }
 
 map.on('load', () => {

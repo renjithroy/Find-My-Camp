@@ -1,11 +1,14 @@
+body {
+    background-color: #f3f2ef;
+}
+
 .outer {
-    border: 1px solid rgba(128, 128, 128, 0.394);
-    padding: 20px;
     min-height: 400px;
-    border-radius: 5px;
+    border-radius: 24px;
     margin: 20px 10px;
     background-color: #fbfbfb;
-    transition: transform .2s;
+    transition: transform 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .outer:hover,
@@ -14,35 +17,47 @@
     transform: translateY(-0.5em);
 }
 
+.inner-spacing {
+    padding: 13px 18px 28px 18px;
+}
+
 .camp-img {
-    border-radius: 5px;
+    border-radius: 24px 24px 0 0;
 }
 
 .camp-title {
-    padding-top: 15px;
-    font-weight: 600;
-}
-
-.camp-desc {
-    color: rgb(128, 128, 128);
-    font-size: 15px;
-    margin-bottom: 30px;
-}
-
-.camp-btn {
-    border: 1px solid rgba(128, 128, 128, 0.5);
-    padding: 10px 10px 10px 10px;
-    background-color: rgba(0, 0, 0, 0.909);
-    color: #fff;
-    width: 100%;
     font-weight: 400;
 }
 
-.camp-btn:hover {
-    border: 1px solid rgba(128, 128, 128, 0.394);
-    background-color: black;
-    font-weight: 500;
-    color: #fff;
+.title-rating {
+    padding: 10px 5px 0px 5px;
+    color: #ff8b3e;
+}
+
+.camp-location {
+    display: block;
+    padding: 0px 5px 10px 5px;
+}
+
+.camp-desc {
+    color: #777;
+    font-weight: 300;
+    font-size: 15px;
+    padding: 5px;
+    padding-bottom: 0;
+}
+
+.camp-price{
+    display: block;
+    padding: 0px 5px 10px 5px;
+}
+
+.heading-underline {
+    width: 60px;
+    height: 3px;
+    opacity: 1;
+    color: #FF802B;
+    background-color: #FF802B;
 }
 
 #toggleMapButton {
@@ -58,7 +73,7 @@
 #toggleMapButton:hover {
     background-color: black;
     box-shadow: 0 0 20px #6fc5ff50;
-    transform: scale(1.1);
+    transform: scale(1.03);
 }
 
 #toggleMapButton:active {
