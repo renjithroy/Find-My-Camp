@@ -144,7 +144,7 @@ module.exports.searchCampgrounds = async (req, res) => {
         const place_name = geoData.body.features[0].place_name;
         const coordinates = geoData.body.features[0].geometry.coordinates;
 
-        const nearbyCampgrounds = await Campground.find({
+        let nearbyCampgrounds = await Campground.find({
             geometry: {
                 $near: {
                     $geometry: {
@@ -153,7 +153,8 @@ module.exports.searchCampgrounds = async (req, res) => {
                     },
                     $maxDistance: 100000 // 100 kilometers
                 }
-            }
+            },
+            isVerified: true
         });
 
         if (nearbyCampgrounds.length === 0) {
